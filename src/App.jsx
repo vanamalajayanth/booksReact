@@ -144,15 +144,18 @@ class Books extends Component {
     };
   }
 
-  sort() {
-    this.setState((prev) => {
-      prev.filteredBooks = prev.filteredBooks.sort((a, b) => {
-        if (prev.currentOrder === "asc") return b.title.localeCompare(a.title);
-        return a.title.localeCompare(b.title);
+  sort(sortBy) {
+    return () => {
+      this.setState((prev) => {
+        prev.filteredBooks = prev.filteredBooks.sort((a, b) => {
+          if (prev.currentOrder === "asc")
+            return b[sortBy].localeCompare(a[sortBy]);
+          return a[sortBy].localeCompare(b[sortBy]);
+        });
+        prev.currentOrder = prev.currentOrder === "asc" ? "desc" : "asc";
+        return prev;
       });
-      prev.currentOrder = prev.currentOrder === "asc" ? "desc" : "asc";
-      return prev;
-    });
+    };
   }
 
   render() {
@@ -165,11 +168,9 @@ class Books extends Component {
         <table>
           <thead>
             <tr>
-              <th>
-                Title <p onClick={this.sort}>▼</p>
-              </th>
-              <th>Author</th>
-              <th>Year</th>
+              <th onClick={this.sort("title")}>Title</th>
+              <th onClick={this.sort("author")}>Author</th>
+              <th onClick={this.sort("year")}>Year</th>
             </tr>
           </thead>
           <tbody>{...books}</tbody>
